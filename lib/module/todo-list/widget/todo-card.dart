@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smile_todo/module/todo-list/bloc/list.dart';
+import 'package:smile_todo/module/todo-list/model.dart';
 
 class TodoCard extends StatelessWidget {
   final Function onPressed;
+  final TodoModel todo;
 
-  TodoCard(this.onPressed);
+  TodoCard(this.todo, this.onPressed);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,9 +45,9 @@ class TodoCard extends StatelessWidget {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _renderLabelAndValue("Start Date", "21 Oct 2019"),
-                          _renderLabelAndValue("End Date", "21 Oct 2019"),
-                          _renderLabelAndValue("Time Left", "21h 20min")
+                          _renderLabelAndValue("Start Date", todo.startDate),
+                          _renderLabelAndValue("End Date", todo.estEndDate),
+                          _renderLabelAndValue("Time Left", "time left")
                         ]),
                   )
                 ],
@@ -52,36 +56,39 @@ class TodoCard extends StatelessWidget {
           ),
           Container(
             color: Colors.grey[300],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
+            child: BlocBuilder<TodoListBloc, List<TodoModel>>(
+                builder: (context, todoList) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Status:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey),
+                        ),
+                        Text(
+                          "Incomplete",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
                     children: <Widget>[
                       Text(
-                        "Status:",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.grey),
-                      ),
-                      Text(
-                        "Incomplete",
+                        "Tick if complete",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
+                      Checkbox(value: false, onChanged: null),
                     ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "Tick if complete",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Checkbox(value: false, onChanged: null),
-                  ],
-                )
-              ],
-            ),
+                  )
+                ],
+              );
+            }),
           )
         ],
       ),
