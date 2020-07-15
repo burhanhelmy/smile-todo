@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:smile_todo/module/todo-list/screen/new-edit-todo.dart';
 import 'package:smile_todo/module/todo-list/widget/todo-card.dart';
 
 class TodoListScreen extends StatefulWidget {
@@ -21,7 +23,11 @@ class _TodoListScreenState extends State<TodoListScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red[500],
-        onPressed: null,
+        onPressed: () {
+          Get.to(NewOrEditTodoScreen(
+            isNew: true,
+          ));
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,
@@ -33,7 +39,13 @@ class _TodoListScreenState extends State<TodoListScreen> {
   _renderList() {
     return ListView(
       padding: EdgeInsets.all(20),
-      children: <Widget>[TodoCard()],
+      children: <Widget>[
+        TodoCard(() {
+          Get.to(NewOrEditTodoScreen(
+            isNew: false,
+          ));
+        })
+      ],
     );
   }
 }

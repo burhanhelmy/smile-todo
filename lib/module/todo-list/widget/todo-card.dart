@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TodoCard extends StatelessWidget {
+  final Function onPressed;
+
+  TodoCard(this.onPressed);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,29 +21,33 @@ class TodoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    "Automated Testing Script",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          GestureDetector(
+            onTap: onPressed,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      "Automated Testing Script",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _renderLabelAndValue("Start Date", "21 Oct 2019"),
-                        _renderLabelAndValue("Start Date", "21 Oct 2019"),
-                        _renderLabelAndValue("Start Date", "21 Oct 2019")
-                      ]),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _renderLabelAndValue("Start Date", "21 Oct 2019"),
+                          _renderLabelAndValue("End Date", "21 Oct 2019"),
+                          _renderLabelAndValue("Time Left", "21h 20min")
+                        ]),
+                  )
+                ],
+              ),
             ),
           ),
           Container(
@@ -67,7 +74,7 @@ class TodoCard extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Text(
-                      "Tick if completed",
+                      "Tick if complete",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Checkbox(value: false, onChanged: null),
