@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smile_todo/module/database/todo_provider.dart';
 import 'package:smile_todo/module/todo-list/bloc/list.dart';
-import 'package:smile_todo/module/todo-list/model.dart';
 
 class TodoCard extends StatelessWidget {
   final Function onPressed;
@@ -10,6 +10,10 @@ class TodoCard extends StatelessWidget {
   TodoCard(this.todo, this.onPressed);
   @override
   Widget build(BuildContext context) {
+    print(todo.done);
+    print(todo.estEndDate);
+    print(todo.startDate);
+    print(todo.title);
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -45,8 +49,8 @@ class TodoCard extends StatelessWidget {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _renderLabelAndValue("Start Date", todo.startDate),
-                          _renderLabelAndValue("End Date", todo.estEndDate),
+                          _renderLabelAndValue("Start Date", "todo.startDate"),
+                          _renderLabelAndValue("End Date", "todo.estEndDate"),
                           _renderLabelAndValue("Time Left", "time left")
                         ]),
                   )

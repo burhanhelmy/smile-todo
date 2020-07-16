@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smile_todo/module/todo-list/model.dart';
+import 'package:smile_todo/module/database/todo_provider.dart';
 import 'package:smile_todo/module/todo-list/styles.dart';
 
 class NewOrEditTodoScreen extends StatefulWidget {

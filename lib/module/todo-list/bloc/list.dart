@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:smile_todo/module/todo-list/model.dart';
+import 'package:smile_todo/module/database/todo_provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as p;
 
 enum TodoListEvent { fetch }
 
@@ -13,8 +15,8 @@ class TodoListBloc extends Bloc<TodoListEvent, List<TodoModel>> {
       {TodoModel todo}) async* {
     switch (event) {
       case TodoListEvent.fetch:
-        todoList.add(todoObject);
-        print(todoList.length.toString());
+        todoList = await _loadTodo();
+        print(todoList);
         yield List.from(todoList);
         break;
       default:
@@ -22,12 +24,19 @@ class TodoListBloc extends Bloc<TodoListEvent, List<TodoModel>> {
     }
   }
 
-  get todoObject {
-    return TodoModel(
-        title: "Automated Testing Script",
-        startDate: "21 Oct 2019",
-        estEndDate: "21 Oct 2019",
-        completed: false);
+  Future<List<TodoModel>> _loadTodo() async {
+    try {
+      var todoProvider = TodoProvider();
+      var databasesPath = await getDatabasesPath();
+      String path = p.join(databasesPath, 'smile.db');
+      await todoProvider.open(path);
+
+      // await todoProvider.insert(_todoObject);
+      return await todoProvider.getTodoList();
+    } catch (e) {
+      print(e.toString());
+    }
+    // return [];
   }
 }
 
