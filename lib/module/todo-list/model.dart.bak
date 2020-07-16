@@ -2,13 +2,15 @@ class TodoModel {
   String title;
   String startDate;
   String estEndDate;
+  bool done;
 
-  TodoModel({this.title, this.startDate, this.estEndDate});
+  TodoModel({this.title, this.startDate, this.estEndDate, this.done});
 
   TodoModel.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     startDate = json['startDate'];
     estEndDate = json['estEndDate'];
+    estEndDate = json['done'];
   }
 
   Map<String, dynamic> toJson() {
@@ -16,6 +18,7 @@ class TodoModel {
     data['title'] = this.title;
     data['startDate'] = this.startDate;
     data['estEndDate'] = this.estEndDate;
+    data['done'] = this.done;
     return data;
   }
 }
