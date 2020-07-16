@@ -10,11 +10,6 @@ import 'package:smile_todo/module/todo-list/screen/new-edit-todo.dart';
 import 'package:smile_todo/module/todo-list/widget/todo-card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// class TodoListScreen extends StatefulWidget {
-//   @override
-//   _TodoListScreenState createState() => _TodoListScreenState();
-// }
-
 class TodoListScreen extends StatefulWidget {
   @override
   _TodoListScreenState createState() => _TodoListScreenState();
@@ -75,8 +70,6 @@ class _TodoListScreenState extends State<TodoListScreen> {
                     isNew: true,
                   )).then((value) =>
                       {context.bloc<TodoListBloc>().add(TodoListEvent.fetch)});
-
-                  // context.bloc<TodoMutateBloc>().add(TodoMutateEvent.add);
                 },
                 child: Icon(
                   Icons.add,
@@ -93,7 +86,6 @@ class _TodoListScreenState extends State<TodoListScreen> {
   _renderList() {
     return BlocBuilder<TodoListBloc, List<TodoModel>>(
         builder: (context, todoList) {
-      // context.bloc<TodoListBloc>().add(TodoListEvent.fetch);
       return todoList.length > 0
           ? ListView.builder(
               padding:
