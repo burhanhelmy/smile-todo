@@ -1,16 +1,37 @@
-# smile_todo
+# SMILE-TODO
 
-A new Flutter project.
+Smile-todo is a todo app powered by flutter and supported by sqlite plugin
 
-## Getting Started
+![demo gif](https://imgur.com/YYjFfhD.gif)
 
-This project is a starting point for a Flutter application.
+[![youtube demo](http://i3.ytimg.com/vi/2ze2IcoLajQ/maxresdefault.jpg)](https://youtu.be/C2A6EzUD-AA)
 
-A few resources to get you started if this is your first Flutter project:
+##### Features
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Todo Features
+  - Create
+  - Update
+  - Delete
+  - Complete
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##### Getting Started
+
+  Smile-todo requires [Flutter](https://flutter.dev/docs/get-started/install) to run.
+  Install the dependencies and start the app.
+  ```sh
+$ flutter run
+```
+  
+##### Try app
+-  [APK](https://drive.google.com/file/d/1qq5WhN6DDZFfCo1ybm87OcmYkKc5M9wm/view?usp=sharing)
+
+##### Plugins
+Geomon is currently implemented with the following plugins. 
+
+| Plugin |
+| ------ |
+| get: ^3.3.0 |
+ | flutter_bloc: ^5.0.0 |
+  |sqflite: ^1.3.0|
+  |intl: ^0.16.1|
+  |equatable: ^1.0.0 |
