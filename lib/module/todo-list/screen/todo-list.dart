@@ -42,30 +42,49 @@ class _TodoListScreenState extends State<TodoListScreen> {
         create: (BuildContext context) {
           return _todoMutateBloc;
         },
-        child: Scaffold(
-          backgroundColor: Colors.grey[100],
-          appBar: AppBar(
-              title: Text(
-                "To-Do List",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              centerTitle: false),
-          body: _renderList(),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: BlocBuilder<TodoMutateBloc, Function>(
-              builder: (context, todoList) {
-            return FloatingActionButton(
-              backgroundColor: Colors.red[500],
-              onPressed: () {
-                context.bloc<TodoMutateBloc>().add(TodoMutateEvent.add);
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            );
-          }),
+        child: BlocListener(
+          bloc: _todoMutateBloc,
+          listener: (BuildContext context, state) {
+            if (state is TodoUpdated) {
+              context.bloc<TodoListBloc>().add(TodoListEvent.fetch);
+            }
+            if (state is TodoDeleted) {
+              Get.snackbar("One todo deleted", "In the dust bin",
+                  snackPosition: SnackPosition.TOP,
+                  duration: Duration(seconds: 5));
+              context.bloc<TodoListBloc>().add(TodoListEvent.fetch);
+            }
+          },
+          child: Scaffold(
+            backgroundColor: Colors.grey[100],
+            appBar: AppBar(
+                title: Text(
+                  "To-Do List",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                centerTitle: false),
+            body: _renderList(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: BlocBuilder<TodoMutateBloc, TodoMutateState>(
+                builder: (context, todoList) {
+              return FloatingActionButton(
+                backgroundColor: Colors.red[500],
+                onPressed: () async {
+                  await Get.to(NewOrEditTodoScreen(
+                    isNew: true,
+                  )).then((value) =>
+                      {context.bloc<TodoListBloc>().add(TodoListEvent.fetch)});
+
+                  // context.bloc<TodoMutateBloc>().add(TodoMutateEvent.add);
+                },
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );
@@ -73,27 +92,25 @@ class _TodoListScreenState extends State<TodoListScreen> {
 
   _renderList() {
     return BlocBuilder<TodoListBloc, List<TodoModel>>(
-        buildWhen: (previousState, state) {
-      return previousState != state;
-      // return true/false to determine whether or not
-      // to rebuild the widget with state
-    }, builder: (context, todoList) {
-      log("rebuild");
+        builder: (context, todoList) {
       // context.bloc<TodoListBloc>().add(TodoListEvent.fetch);
-      return ListView.builder(
-          padding: EdgeInsets.only(top: 10, bottom: 80, left: 10, right: 10),
-          itemCount: todoList.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TodoCard(todoList[index], () {
-                Get.to(NewOrEditTodoScreen(
-                  todo: todoList[index],
-                  isNew: false,
-                ));
-              }),
-            );
-          });
+      return todoList.length > 0
+          ? ListView.builder(
+              padding:
+                  EdgeInsets.only(top: 10, bottom: 80, left: 10, right: 10),
+              itemCount: todoList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TodoCard(todoList[index], () {
+                    Get.to(NewOrEditTodoScreen(
+                      todo: todoList[index],
+                      isNew: false,
+                    )).then((value) => _todoListBloc.add(TodoListEvent.fetch));
+                  }),
+                );
+              })
+          : Center(child: Text("Start to be productive now :)"));
     });
   }
 }

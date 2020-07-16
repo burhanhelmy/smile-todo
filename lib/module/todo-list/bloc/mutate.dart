@@ -1,66 +1,137 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:smile_todo/module/database/todo_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
+import 'package:equatable/equatable.dart';
 
-enum TodoMutateEvent { delete, add, complete, incomplete }
+// class TodoMutateAction { delete, add, complete, incomplete }
+abstract class TodoMutateEvent extends Equatable {
+  const TodoMutateEvent();
+}
 
-class TodoMutateBloc extends Bloc<TodoMutateEvent, Function> {
-  TodoMutateBloc() : super(() {});
+abstract class TodoMutateState extends Equatable {
   @override
-  Stream<Function> mapEventToState(TodoMutateEvent event,
-      {TodoModel todo}) async* {
-    switch (event) {
-      case TodoMutateEvent.delete:
-        // Simulating Network Latency
-        // await Future<void>.delayed(Duration(seconds: 1));
-        yield () {};
-        break;
-      case TodoMutateEvent.add:
-        _addTodo();
-        // Simulating Network Latency
-        // await Future<void>.delayed(Duration(milliseconds: 500));
-        yield () {};
-        break;
-      case TodoMutateEvent.complete:
-        // Simulating Network Latency
-        // await Future<void>.delayed(Duration(milliseconds: 500));
-        yield () {};
-        break;
-      case TodoMutateEvent.incomplete:
-        // Simulating Network Latency
-        // await Future<void>.delayed(Duration(milliseconds: 500));
-        yield () {};
-        break;
-      default:
-        addError(Exception('unhandled event: $event'));
+  List<Object> get props => [];
+}
+
+class CompletePressed extends TodoMutateEvent {
+  final TodoModel todo;
+
+  const CompletePressed({
+    @required this.todo,
+  });
+
+  @override
+  List<Object> get props => [todo];
+
+  @override
+  String toString() => 'CompletePressed { todo: $todo }';
+}
+
+class AddPressed extends TodoMutateEvent {
+  final TodoModel todo;
+
+  const AddPressed({
+    @required this.todo,
+  });
+
+  @override
+  List<Object> get props => [todo];
+
+  @override
+  String toString() => 'AddPressed { todo: $todo }';
+}
+
+class SavePressed extends TodoMutateEvent {
+  final TodoModel todo;
+
+  const SavePressed({
+    @required this.todo,
+  });
+
+  @override
+  List<Object> get props => [todo];
+
+  @override
+  String toString() => 'SavePressed { todo: $todo }';
+}
+
+class DeletePressed extends TodoMutateEvent {
+  final TodoModel todo;
+
+  const DeletePressed({
+    @required this.todo,
+  });
+
+  @override
+  List<Object> get props => [todo];
+
+  @override
+  String toString() => 'DeletePressed { todo: $todo }';
+}
+
+class AddSucess extends TodoMutateState {}
+
+class TodoUpdated extends TodoMutateState {}
+
+class TodoDeleted extends TodoMutateState {}
+
+class Initial extends TodoMutateState {}
+
+class TodoMutateBloc extends Bloc<TodoMutateEvent, TodoMutateState> {
+  TodoMutateBloc() : super(Initial());
+  @override
+  Stream<TodoMutateState> mapEventToState(TodoMutateEvent event) async* {
+    if (event is AddPressed) {
+      await _addTodo(event.todo);
+      yield AddSucess();
+    } else if (event is CompletePressed) {
+      await _updateTodo(event.todo);
+      yield TodoUpdated();
+    } else if (event is SavePressed) {
+      await _updateTodo(event.todo);
+      yield TodoUpdated();
+    } else if (event is DeletePressed) {
+      await _deleteTodo(event.todo);
+      yield TodoDeleted();
     }
   }
+}
 
-  get _todoObject {
-    return TodoModel(
-        id: 1,
-        title: "Automated Testing Script",
-        startDate: "21 Oct 2019",
-        estEndDate: "21 Oct 2019",
-        done: false);
+Future _addTodo(todo) async {
+  try {
+    var todoProvider = TodoProvider();
+    var databasesPath = await getDatabasesPath();
+    String path = p.join(databasesPath, 'smile.db');
+    await todoProvider.open(path);
+
+    await todoProvider.insert(todo);
+    // return await todoProvider.getTodoList();
+  } catch (e) {
+    print(e.toString());
   }
+}
 
-  Future<List<TodoModel>> _addTodo() async {
-    try {
-      var todoProvider = TodoProvider();
-      var databasesPath = await getDatabasesPath();
-      String path = p.join(databasesPath, 'smile.db');
-      await todoProvider.open(path);
+Future _deleteTodo(TodoModel todo) async {
+  try {
+    var todoProvider = TodoProvider();
+    await todoProvider.delete(todo.id);
+  } catch (e) {
+    print(e.toString());
+  }
+}
 
-      await todoProvider.insert(_todoObject);
-      // return await todoProvider.getTodoList();
-    } catch (e) {
-      print(e.toString());
-    }
-    // return [];
+Future _updateTodo(todo) async {
+  try {
+    var todoProvider = TodoProvider();
+    await todoProvider.update(todo);
+  } catch (e) {
+    print(e.toString());
   }
 }
 

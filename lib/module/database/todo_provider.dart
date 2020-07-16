@@ -32,6 +32,8 @@ class TodoModel {
   TodoModel.fromMap(Map<String, dynamic> map) {
     id = map[columnId];
     title = map[columnTitle];
+    estEndDate = map[columnEstEndDate];
+    startDate = map[columnStartDate];
     done = map[columnDone] == 1;
   }
 }
@@ -81,6 +83,7 @@ class TodoProvider {
   }
 
   Future<int> update(TodoModel todo) async {
+    print("update ${todo.id}");
     return await db.update(tableTodo, todo.toMap(),
         where: '$columnId = ?', whereArgs: [todo.id]);
   }

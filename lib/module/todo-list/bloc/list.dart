@@ -16,8 +16,11 @@ class TodoListBloc extends Bloc<TodoListEvent, List<TodoModel>> {
     switch (event) {
       case TodoListEvent.fetch:
         todoList = await _loadTodo();
-        print(todoList);
-        yield List.from(todoList);
+        if (todoList != null) {
+          yield List.from(todoList);
+        } else {
+          yield [];
+        }
         break;
       default:
         addError(Exception('unhandled event: $event'));
@@ -30,8 +33,6 @@ class TodoListBloc extends Bloc<TodoListEvent, List<TodoModel>> {
       var databasesPath = await getDatabasesPath();
       String path = p.join(databasesPath, 'smile.db');
       await todoProvider.open(path);
-
-      // await todoProvider.insert(_todoObject);
       return await todoProvider.getTodoList();
     } catch (e) {
       print(e.toString());
