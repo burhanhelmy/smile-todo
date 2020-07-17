@@ -26,7 +26,7 @@ $ flutter run
 -  [APK](https://drive.google.com/file/d/1qq5WhN6DDZFfCo1ybm87OcmYkKc5M9wm/view?usp=sharing)
 
 ##### Plugins
-Geomon is currently implemented with the following plugins. 
+Smile-todo is currently implemented with the following plugins. 
 
 | Plugin |
 | ------ |
